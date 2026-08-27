@@ -125,6 +125,9 @@ const t = tr(lang);
       event.preventDefault();
       if (!form.reportValidity()) return;
 
+      // Fresh attempt — reset any error card from a previous try.
+      errorEl.hidden = true;
+
       // Serialise form data as application/x-www-form-urlencoded (what
       // Netlify Forms expects for classic form submissions).
       var params = new URLSearchParams();
@@ -147,8 +150,11 @@ const t = tr(lang);
           // Success — swap the form for the success card.
           form.hidden = true;
           success.hidden = false;
-          // Scroll the success card into view (helps on mobile).
-          success.scrollIntoView({ behavior: "smooth", block: "center" });
+          // Non-critical: scroll the success card into view (helps on mobile).
+          // Wrapped in try so a browser quirk here can't fall into .catch.
+          try {
+            success.scrollIntoView({ behavior: "smooth", block: "center" });
+          } catch (_) { /* ignore */ }
         })
         .catch(function (err) {
           console.warn("[request-cv] submit failed:", err);
@@ -162,6 +168,18 @@ const t = tr(lang);
 
 <style>
   .rcv-wrap { max-width: 560px; }
+
+  /*
+   * IMPORTANT — hidden-attribute rescue:
+   * Setting `display: grid/…` on the form/success/error containers overrides
+   * the browser's default `[hidden] { display: none }` rule (same specificity,
+   * author styles win). Without these three lines the success and error cards
+   * render on page load, before the visitor has even clicked submit.
+   */
+  .rcv-form[hidden],
+  .rcv-success[hidden],
+  .rcv-error[hidden] { display: none !important; }
+
   .rcv-form {
     display: grid;
     gap: 1rem;
