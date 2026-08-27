@@ -268,18 +268,27 @@ export const skills: Record<Lang, SkillCategory[]> = {
 // -----------------------------------------------------------
 // CERTIFICATIONS — the ONLY three real ones. Never add more here.
 // -----------------------------------------------------------
-type Cert = { badge: string; name: string; issuer: string };
+// Optional `verifyUrl` turns the card into a clickable link that opens the
+// issuer's verification page (Credly, Microsoft Learn, PDF, etc.) in a new tab.
+type Cert = { badge: string; name: string; issuer: string; verifyUrl?: string };
+
+// Verification URLs are shared between EN and ES (same certificate, same issuer).
+const CERT_URLS = {
+  comptia:   "https://www.credly.com/badges/4f83a979-6b3b-4dcf-880d-5453af6b0d20/linked_in_profile",
+  itil:      "https://1drv.ms/b/c/9d497c4d2000e411/ERukGyzvpBVJtDFloNaTZrEBCMQRDV2xNCjXGWH76A6uiw?e=h08Jrz",
+  microsoft: "https://learn.microsoft.com/en-us/users/rodrigomanuelbarreto-8339/credentials/b13ede8b35684597",
+} as const;
 
 export const certs: Record<Lang, Cert[]> = {
   en: [
-    { badge: "Certification", name: "CompTIA A+", issuer: "CompTIA" },
-    { badge: "Certification", name: "ITIL v4 Foundation", issuer: "AXELOS / PeopleCert" },
-    { badge: "Certification", name: "Microsoft Azure Fundamentals", issuer: "Microsoft · AZ-900" },
+    { badge: "Certification", name: "CompTIA A+",                   issuer: "CompTIA",              verifyUrl: CERT_URLS.comptia },
+    { badge: "Certification", name: "ITIL v4 Foundation",           issuer: "AXELOS / PeopleCert",  verifyUrl: CERT_URLS.itil },
+    { badge: "Certification", name: "Microsoft Azure Fundamentals", issuer: "Microsoft · AZ-900",   verifyUrl: CERT_URLS.microsoft },
   ],
   es: [
-    { badge: "Certificación", name: "CompTIA A+", issuer: "CompTIA" },
-    { badge: "Certificación", name: "ITIL v4 Foundation", issuer: "AXELOS / PeopleCert" },
-    { badge: "Certificación", name: "Microsoft Azure Fundamentals", issuer: "Microsoft · AZ-900" },
+    { badge: "Certificación", name: "CompTIA A+",                   issuer: "CompTIA",              verifyUrl: CERT_URLS.comptia },
+    { badge: "Certificación", name: "ITIL v4 Foundation",           issuer: "AXELOS / PeopleCert",  verifyUrl: CERT_URLS.itil },
+    { badge: "Certificación", name: "Microsoft Azure Fundamentals", issuer: "Microsoft · AZ-900",   verifyUrl: CERT_URLS.microsoft },
   ],
 };
 

@@ -1,7 +1,12 @@
 ---
 /*
  * Certifications — ONLY the three real ones.
- * "Currently studying" goes below as separate learning line.
+ * "Currently studying" goes below as a separate learning line.
+ *
+ * When a cert has a `verifyUrl` set (see src/data/content.ts), the whole card
+ * renders as a clickable link that opens the issuer's verification page in a
+ * new tab (Credly for CompTIA, Microsoft Learn for AZ-900, OneDrive PDF for
+ * ITIL). If no `verifyUrl` is set, the card stays a static div.
  */
 
 import { certs } from "../data/content";
@@ -11,6 +16,9 @@ type Props = { lang: Lang };
 const { lang } = Astro.props;
 const t = tr(lang);
 const items = certs[lang];
+
+// One string per language for the "opens externally" screen-reader hint.
+const verifyLabel = lang === "en" ? "Verify certificate" : "Verificar certificado";
 ---
 
 <section id="certifications" aria-label={t("section.certs")}>
@@ -19,15 +27,77 @@ const items = certs[lang];
     <h2 class="section-title">{t("section.certs")}</h2>
 
     <div class="certs">
-      {items.map((c) => (
-        <div class="certs__item reveal">
-          <span class="certs__badge">{c.badge}</span>
-          <span class="certs__name">{c.name}</span>
-          <span class="certs__issuer">{c.issuer}</span>
-        </div>
-      ))}
+      {items.map((c) =>
+        c.verifyUrl ? (
+          <a
+            class="certs__item certs__item--link reveal"
+            href={c.verifyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${c.name} — ${verifyLabel}`}
+          >
+            <span class="certs__badge">{c.badge}</span>
+            <span class="certs__name">{c.name}</span>
+            <span class="certs__issuer">{c.issuer}</span>
+            <span class="certs__verify" aria-hidden="true">
+              {verifyLabel}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round">
+                <path d="M7 17L17 7"/><path d="M8 7h9v9"/>
+              </svg>
+            </span>
+          </a>
+        ) : (
+          <div class="certs__item reveal">
+            <span class="certs__badge">{c.badge}</span>
+            <span class="certs__name">{c.name}</span>
+            <span class="certs__issuer">{c.issuer}</span>
+          </div>
+        )
+      )}
     </div>
 
     <p class="certs__learning">{t("section.certsLearning")}</p>
   </div>
 </section>
+
+<style>
+  /* Clickable cert card — visual hover feedback + arrow appears in the corner */
+  .certs__item--link {
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.25s var(--ease-out),
+                transform 0.25s var(--ease-out),
+                background 0.25s var(--ease-out);
+  }
+  .certs__item--link:hover,
+  .certs__item--link:focus-visible {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    background: var(--accent-soft);
+  }
+  .certs__item--link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .certs__verify {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+    font-size: 0.78rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.7;
+    transition: opacity 0.2s var(--ease-out);
+  }
+  .certs__item--link:hover .certs__verify,
+  .certs__item--link:focus-visible .certs__verify {
+    opacity: 1;
+  }
+</style>
