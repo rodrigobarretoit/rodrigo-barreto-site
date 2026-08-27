@@ -1,0 +1,54 @@
+---
+/*
+ * Solicitar CV — Español. Espejo de request-cv.astro.
+ */
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import RequestCvForm from "../../components/RequestCvForm.astro";
+import { tr } from "../../data/ui";
+
+const lang = "es" as const;
+const t = tr(lang);
+const title = "Solicitar CV — Rodrigo Barreto";
+const description = "Mandale a Rodrigo Barreto una nota corta y recibí su CV actualizado en menos de 24 horas.";
+---
+
+<BaseLayout lang={lang} title={title} description={description} path={Astro.url.pathname}>
+  <Nav slot="nav" lang={lang} path={Astro.url.pathname} page="profile" />
+
+  <section class="rcv-header container">
+    <span class="section-eyebrow">{t("requestCv.title")}</span>
+    <h1>{t("requestCv.title")}</h1>
+    <p>{t("requestCv.lead")}</p>
+  </section>
+
+  <div class="container rcv-container">
+    <RequestCvForm lang={lang} />
+    <p class="rcv-back">
+      <a href="/es/">{t("requestCv.back")}</a>
+    </p>
+  </div>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .rcv-header {
+    padding-block: clamp(5rem, 9vw, 7rem) clamp(1rem, 3vw, 2rem);
+  }
+  .rcv-header h1 {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    margin-bottom: 1.25rem;
+  }
+  .rcv-header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 58ch;
+  }
+  .rcv-container { padding-bottom: 5rem; }
+  .rcv-back { margin-top: 3rem; }
+  .rcv-back a { color: var(--accent); }
+  .rcv-back a:hover { text-decoration: underline; }
+</style>

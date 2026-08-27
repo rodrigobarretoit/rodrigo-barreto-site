@@ -13,7 +13,7 @@
  *      "hero__portrait-initials" span.
  */
 
-import { site, cvRequestMailto } from "../data/site";
+import { site } from "../data/site";
 import { hero } from "../data/content";
 import { tr, type Lang } from "../data/ui";
 
@@ -42,8 +42,8 @@ const h = hero[lang];
         <span>{h.availability}</span>
       </div>
       <div class="hero__actions">
-        <a href={cvRequestMailto} class="btn btn--primary">{t("cta.downloadCv")}</a>
-        <a href={`mailto:${site.email}`} class="btn btn--ghost">{t("cta.contact")}</a>
+        <a href={lang === "en" ? "/request-cv/" : "/es/request-cv/"} class="btn btn--primary">{t("cta.downloadCv")}</a>
+        <a href="#contact" class="btn btn--ghost">{t("cta.contact")}</a>
       </div>
     </div>
 

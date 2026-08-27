@@ -11,7 +11,7 @@
  *   - page: "profile" | "proof" — highlights the active nav link.
  */
 
-import { site, cvRequestMailto } from "../data/site";
+import { site } from "../data/site";
 import { tr, type Lang } from "../data/ui";
 
 type Props = { lang: Lang; path: string; page: "profile" | "proof" };
@@ -29,8 +29,12 @@ const esUrl = lang === "en" ? altPath("en", path) : path;
 const enUrl = lang === "es" ? altPath("es", path) : path;
 
 // Where the "Profile" and "Proof" links go, based on current lang.
-const profileHref = lang === "en" ? "/" : "/es/";
-const proofHref = lang === "en" ? "/proof/" : "/es/proof/";
+const profileHref  = lang === "en" ? "/"           : "/es/";
+const proofHref    = lang === "en" ? "/proof/"     : "/es/proof/";
+// "Request CV" opens a dedicated page with a small form → mailto.
+const requestCvHref = lang === "en" ? "/request-cv/" : "/es/request-cv/";
+// "Contact" jumps to the Contact section of the profile page.
+const contactHref  = `${profileHref}#contact`;
 ---
 
 <nav class="nav" id="nav" aria-label="Primary">
@@ -58,8 +62,8 @@ const proofHref = lang === "en" ? "/proof/" : "/es/proof/";
     </div>
 
     <div class="nav__ctas">
-      <a href={cvRequestMailto} class="btn btn--ghost">{t("nav.cv")}</a>
-      <a href={`mailto:${site.email}`} class="btn btn--primary">{t("nav.contact")}</a>
+      <a href={requestCvHref} class="btn btn--ghost">{t("nav.cv")}</a>
+      <a href={contactHref} class="btn btn--primary">{t("nav.contact")}</a>
 
       <!--
         Language toggle. Both links exist; the JS updates localStorage

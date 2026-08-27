@@ -1,0 +1,205 @@
+---
+/*
+ * Request CV form.
+ *
+ * How it works:
+ *   1. Visitor fills Name + Company (required) + Role + Message (optional).
+ *   2. Clicks the submit button.
+ *   3. Inline JS reads the fields, escapes them, builds a mailto: URL with a
+ *      pre-filled subject and body, and opens it — the visitor's default email
+ *      client (Outlook, Apple Mail, Gmail-as-handler) appears with everything
+ *      typed already. They just hit Send.
+ *
+ * Why mailto and not a backend?
+ *   - No server needed → 100% free, works on any static host.
+ *   - The visitor sees the email BEFORE it's sent (control + trust).
+ *   - No spam-filter drama: it's their own outgoing message.
+ *
+ * If the visitor has no default mail client (e.g. corporate laptop), we
+ * fall back to showing the exact mailto: link so they can copy it.
+ */
+
+import { site } from "../data/site";
+import { tr, type Lang } from "../data/ui";
+
+type Props = { lang: Lang };
+const { lang } = Astro.props;
+const t = tr(lang);
+---
+
+<form class="rcv-form" id="rcv-form" novalidate>
+  <div class="rcv-field">
+    <label for="rcv-name">{t("requestCv.name")} <span aria-hidden="true">*</span></label>
+    <input
+      type="text"
+      id="rcv-name"
+      name="name"
+      required
+      autocomplete="name"
+      minlength="2"
+    />
+  </div>
+
+  <div class="rcv-field">
+    <label for="rcv-company">{t("requestCv.company")} <span aria-hidden="true">*</span></label>
+    <input
+      type="text"
+      id="rcv-company"
+      name="company"
+      required
+      autocomplete="organization"
+      minlength="2"
+    />
+  </div>
+
+  <div class="rcv-field">
+    <label for="rcv-role">{t("requestCv.role")}</label>
+    <input
+      type="text"
+      id="rcv-role"
+      name="role"
+      autocomplete="off"
+    />
+  </div>
+
+  <div class="rcv-field">
+    <label for="rcv-message">{t("requestCv.message")}</label>
+    <textarea id="rcv-message" name="message" rows="4"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn--primary rcv-submit">
+    {t("requestCv.submit")}
+  </button>
+
+  <p class="rcv-note">{t("requestCv.note")}</p>
+
+  <!-- Fallback shown by JS if the mail client didn't open -->
+  <p class="rcv-fallback" id="rcv-fallback" hidden>
+    <strong>{lang === "en" ? "Nothing happened?" : "¿No pasó nada?"}</strong>
+    {lang === "en"
+      ? "Your browser probably doesn't have a default email client. Copy this link:"
+      : "Tu navegador probablemente no tiene un cliente de email por defecto. Copiá este link:"}
+    <br />
+    <a href="#" id="rcv-fallback-link" class="rcv-fallback-link"></a>
+  </p>
+</form>
+
+<script is:inline define:vars={{ email: site.email, langCode: lang }}>
+  (function () {
+    "use strict";
+    var form = document.getElementById("rcv-form");
+    var fallback = document.getElementById("rcv-fallback");
+    var fallbackLink = document.getElementById("rcv-fallback-link");
+    if (!form) return;
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      var name    = form.name.value.trim();
+      var company = form.company.value.trim();
+      var role    = form.role.value.trim();
+      var message = form.message.value.trim();
+
+      // Build a clean, human-readable subject + body.
+      var subject = "CV request from " + company;
+      var bodyLines = [
+        "Hi Rodrigo,",
+        "",
+        "I'm " + name + " from " + company + ".",
+      ];
+      if (role) bodyLines.push("We're hiring for: " + role + ".");
+      bodyLines.push("Could you send me your latest CV?");
+      if (message) {
+        bodyLines.push("");
+        bodyLines.push(message);
+      }
+      bodyLines.push("");
+      bodyLines.push("Thanks,");
+      bodyLines.push(name);
+      var body = bodyLines.join("\n");
+
+      var mailto =
+        "mailto:" + email +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+
+      // Try to open the default mail client
+      window.location.href = mailto;
+
+      // If nothing seems to happen in ~1.2s, show the fallback with the link
+      setTimeout(function () {
+        if (document.hidden) return;   // mail app opened and took focus
+        fallbackLink.textContent = mailto;
+        fallbackLink.href = mailto;
+        fallback.hidden = false;
+      }, 1200);
+    });
+  })();
+</script>
+
+<style>
+  .rcv-form {
+    max-width: 560px;
+    display: grid;
+    gap: 1rem;
+  }
+  .rcv-field {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .rcv-field label {
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .rcv-field label span {
+    color: var(--accent);
+  }
+  .rcv-field input,
+  .rcv-field textarea {
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    color: var(--text);
+    font: 400 1rem var(--font-sans);
+    transition: border-color 0.2s var(--ease-out), background 0.2s var(--ease-out);
+  }
+  .rcv-field input:focus,
+  .rcv-field textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+  }
+  .rcv-field textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  .rcv-submit {
+    justify-self: start;
+    margin-top: 0.5rem;
+  }
+  .rcv-note {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    max-width: 60ch;
+    line-height: 1.5;
+  }
+  .rcv-fallback {
+    padding: 1rem;
+    border: 1px dashed var(--accent);
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .rcv-fallback-link {
+    color: var(--accent);
+    word-break: break-all;
+    text-decoration: underline;
+  }
+</style>

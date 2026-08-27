@@ -4,12 +4,15 @@
  * NO phone, NO street address (per brief). Public-safe only.
  */
 
-import { site, cvRequestMailto } from "../data/site";
+import { site } from "../data/site";
 import { tr, type Lang } from "../data/ui";
 
 type Props = { lang: Lang };
 const { lang } = Astro.props;
 const t = tr(lang);
+
+// The Request CV button jumps to the dedicated /request-cv page (per lang).
+const requestCvHref = lang === "en" ? "/request-cv/" : "/es/request-cv/";
 ---
 
 <section id="contact" class="contact" aria-label={t("section.contact")}>
@@ -20,8 +23,11 @@ const t = tr(lang);
       <div>
         <h2 class="section-title">{t("section.contact")}</h2>
         <div style="margin-top: 1.75rem; display: flex; gap: .75rem; flex-wrap: wrap;">
-          <a href={cvRequestMailto} class="btn btn--primary">{t("cta.downloadCv")}</a>
-          <a href={`mailto:${site.email}`} class="btn btn--ghost">{t("cta.email")}</a>
+          <a href={`mailto:${site.email}`} class="btn btn--primary">{t("cta.email")}</a>
+          <a href={site.scheduleUrl} class="btn btn--ghost" target="_blank" rel="noopener">
+            {t("cta.bookCall")}
+          </a>
+          <a href={requestCvHref} class="btn btn--ghost">{t("cta.downloadCv")}</a>
         </div>
       </div>
 

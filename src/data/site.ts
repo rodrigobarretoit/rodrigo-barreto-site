@@ -16,20 +16,18 @@ export const site = {
     href: "https://www.linkedin.com/in/rodrigobarretoroa",
   },
 
-  // CV is sent by request — the button opens the visitor's email client
-  // with a pre-filled subject so you can see who asked and reply with the PDF.
-  // If you ever want a public download instead, add `cvPath: "/cv/…"` here
-  // and swap the mailto for a plain <a download href={site.cvPath}> in the
-  // three components that use `cvRequestMailto` (Nav, Hero, Contact).
-  cvRequestSubject: "CV request from your site",
+  // CV is sent by request. The "Request CV" buttons in the nav / hero go
+  // to a dedicated page (/request-cv) with a small form. Submitting the form
+  // opens the visitor's default email client with subject + body pre-filled.
+  // If you ever want a public PDF download instead, add `cvPath: "/cv/…"`
+  // and swap the /request-cv link for `<a download href={site.cvPath}>`.
+
+  // Scheduling — for the "Book a call" button in Contact.
+  // Replace this placeholder with your actual Cal.com or Calendly link once
+  // you've created the account (see README > "Book-a-call setup").
+  scheduleUrl: "https://cal.com/rodrigobarreto",
 
   // Domain — bump this when you have a real one; used in Open Graph tags.
   domain: "rodrigobarretoit.com",
 } as const;
 
-/**
- * Builds the "Request CV" mailto link with a pre-filled subject.
- * Kept as a helper so all three CTA buttons share one source of truth.
- */
-export const cvRequestMailto =
-  `mailto:${site.email}?subject=${encodeURIComponent(site.cvRequestSubject)}`;

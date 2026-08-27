@@ -100,32 +100,14 @@ export const quickFacts = {
 // -----------------------------------------------------------
 type TimelineItem = { year: string; title: string; body: string };
 
+// Timeline is displayed in the ORDER you write it here — newest first.
+// If you want oldest-first (chronological), just reverse the arrays.
 export const timeline: Record<Lang, TimelineItem[]> = {
   en: [
     {
-      year: "2016 · Villarrica, Paraguay",
-      title: "The person you called",
-      body: "I started as an **IT Support Technician** at Electro Info, covering **30+ business clients** on site: hardware, networking, printers, whatever broke. Small town, no backup. That is where I learned support is about people, not machines.",
-    },
-    {
-      year: "2019 · Leading the escalations",
-      title: "First time owning a system, not just a ticket",
-      body: "I moved up to **Technical Support Lead**, running a team of **4 engineers** as the escalation point for complex incidents and administering Active Directory across multi-domain environments. The first time I owned a system, not just a ticket.",
-    },
-    {
-      year: "2022 · Dublin",
-      title: "Starting again on purpose",
-      body: "I moved to Dublin and completed a **Higher Diploma in Computing Science at CCT College**, to rebuild my career in a new market.",
-    },
-    {
-      year: "2023 · The dedicated engineer",
-      title: "One customer, 500+ users, 8 countries",
-      body: "I joined an MSP in Dublin, first in the pool doing imaging and hardware, then assigned as the dedicated engineer for an international pharmaceutical company. A **two-person team**, primary point of contact for **500+ users and 500+ endpoints across 8 countries**.",
-    },
-    {
-      year: "2023–2026 · Doing it properly at scale",
-      title: "Modernise the fleet, cut the toil",
-      body: "I led the full migration to **Windows Autopilot and Intune: 500+ devices, 100% compliance**, far less manual work. I cut average resolution time by **30%** by fixing the process and writing **30+ knowledge base articles**. And I was who the CEO called when a global meeting could not fail: **100% uptime**.",
+      year: "2026 · The IFSC",
+      title: "PC refresh in regulated finance",
+      body: "I was brought into **PartnerRe**, a global reinsurance company in the Dublin IFSC, to deliver a company-wide PC refresh: **close to 100 machines across a 250-user office**, full user migrations, certified secure data sanitisation, no disruption to a regulated financial services operation. Delivered, clean close.",
     },
     {
       year: "2026 · Thirty tenants, thirty surprises",
@@ -133,37 +115,37 @@ export const timeline: Record<Lang, TimelineItem[]> = {
       body: "A short engagement doing L2 support and Microsoft 365 administration across **30+ client tenants via GDAP**: Entra ID, Exchange Online, Intune, email authentication. Thirty different environments, each with its own edge cases.",
     },
     {
-      year: "2026 · The IFSC",
-      title: "PC refresh in regulated finance",
-      body: "I was brought into **PartnerRe**, a global reinsurance company in the Dublin IFSC, to deliver a company-wide PC refresh: **close to 100 machines across a 250-user office**, full user migrations, certified secure data sanitisation, no disruption to a regulated financial services operation. Delivered, clean close.",
+      year: "2023–2026 · Doing it properly at scale",
+      title: "Modernise the fleet, cut the toil",
+      body: "I led the full migration to **Windows Autopilot and Intune: 500+ devices, 100% compliance**, far less manual work. I cut average resolution time by **30%** by fixing the process and writing **30+ knowledge base articles**. And I was who the CEO called when a global meeting could not fail: **100% uptime**.",
+    },
+    {
+      year: "2023 · The dedicated engineer",
+      title: "One customer, 500+ users, 8 countries",
+      body: "I joined an MSP in Dublin, first in the pool doing imaging and hardware, then assigned as the dedicated engineer for an international pharmaceutical company. A **two-person team**, primary point of contact for **500+ users and 500+ endpoints across 8 countries**.",
+    },
+    {
+      year: "2022 · Dublin",
+      title: "Starting again on purpose",
+      body: "I moved to Dublin and completed a **Higher Diploma in Computing Science at CCT College**, to rebuild my career in a new market.",
+    },
+    {
+      year: "2019 · Leading the escalations",
+      title: "First time owning a system, not just a ticket",
+      body: "I moved up to **Technical Support Lead**, running a team of **4 engineers** as the escalation point for complex incidents and administering Active Directory across multi-domain environments. The first time I owned a system, not just a ticket.",
+    },
+    {
+      year: "2016 · Villarrica, Paraguay",
+      title: "The person you called",
+      body: "I started as an **IT Support Technician** at Electro Info, covering **30+ business clients** on site: hardware, networking, printers, whatever broke. Small town, no backup. That is where I learned support is about people, not machines.",
     },
   ],
 
   es: [
     {
-      year: "2016 · Villarrica, Paraguay",
-      title: "La persona a la que llamabas",
-      body: "Empecé como **IT Support Technician** en Electro Info, cubriendo **30+ clientes corporativos** en sitio: hardware, redes, impresoras, lo que fallara. Un pueblo chico, sin backup. Ahí aprendí que el soporte es sobre personas, no máquinas.",
-    },
-    {
-      year: "2019 · Liderando escalaciones",
-      title: "Primera vez que era mío un sistema, no solo un ticket",
-      body: "Ascendí a **Technical Support Lead**, dirigiendo un equipo de **4 ingenieros** como punto de escalación para incidentes complejos y administrando Active Directory en entornos multi-dominio. La primera vez que era mío un sistema, no solo un ticket.",
-    },
-    {
-      year: "2022 · Dublín",
-      title: "Empezar de nuevo, a propósito",
-      body: "Me mudé a Dublín y completé un **Higher Diploma in Computing Science en CCT College**, para reconstruir mi carrera en un nuevo mercado.",
-    },
-    {
-      year: "2023 · El ingeniero dedicado",
-      title: "Un cliente, 500+ usuarios, 8 países",
-      body: "Me sumé a un MSP en Dublín, primero en el pool haciendo imaging y hardware, después asignado como ingeniero dedicado para una farmacéutica internacional. Un **equipo de dos personas**, punto de contacto principal para **500+ usuarios y 500+ endpoints en 8 países**.",
-    },
-    {
-      year: "2023–2026 · Hacerlo bien, a escala",
-      title: "Modernizar la flota, reducir el trabajo manual",
-      body: "Lideré la migración completa a **Windows Autopilot e Intune: 500+ dispositivos, 100% compliance**, mucho menos trabajo manual. Bajé el tiempo medio de resolución un **30%** arreglando el proceso y escribiendo **30+ artículos de knowledge base**. Y era a quien el CEO llamaba cuando una reunión global no podía fallar: **100% de uptime**.",
+      year: "2026 · El IFSC",
+      title: "Refresh de PC en un entorno financiero regulado",
+      body: "Fui llamado a **PartnerRe**, una reaseguradora global en el IFSC de Dublín, para ejecutar un refresh de PC a nivel compañía: **cerca de 100 máquinas en una oficina de 250 usuarios**, migraciones completas de usuario, sanitización certificada de datos, sin interrumpir una operación de servicios financieros regulada. Entregado, cierre limpio.",
     },
     {
       year: "2026 · Treinta tenants, treinta sorpresas",
@@ -171,9 +153,29 @@ export const timeline: Record<Lang, TimelineItem[]> = {
       body: "Un engagement corto haciendo soporte L2 y administración de Microsoft 365 en **30+ tenants de clientes vía GDAP**: Entra ID, Exchange Online, Intune, autenticación de email. Treinta entornos distintos, cada uno con sus propias particularidades.",
     },
     {
-      year: "2026 · El IFSC",
-      title: "Refresh de PC en un entorno financiero regulado",
-      body: "Fui llamado a **PartnerRe**, una reaseguradora global en el IFSC de Dublín, para ejecutar un refresh de PC a nivel compañía: **cerca de 100 máquinas en una oficina de 250 usuarios**, migraciones completas de usuario, sanitización certificada de datos, sin interrumpir una operación de servicios financieros regulada. Entregado, cierre limpio.",
+      year: "2023–2026 · Hacerlo bien, a escala",
+      title: "Modernizar la flota, reducir el trabajo manual",
+      body: "Lideré la migración completa a **Windows Autopilot e Intune: 500+ dispositivos, 100% compliance**, mucho menos trabajo manual. Bajé el tiempo medio de resolución un **30%** arreglando el proceso y escribiendo **30+ artículos de knowledge base**. Y era a quien el CEO llamaba cuando una reunión global no podía fallar: **100% de uptime**.",
+    },
+    {
+      year: "2023 · El ingeniero dedicado",
+      title: "Un cliente, 500+ usuarios, 8 países",
+      body: "Me sumé a un MSP en Dublín, primero en el pool haciendo imaging y hardware, después asignado como ingeniero dedicado para una farmacéutica internacional. Un **equipo de dos personas**, punto de contacto principal para **500+ usuarios y 500+ endpoints en 8 países**.",
+    },
+    {
+      year: "2022 · Dublín",
+      title: "Empezar de nuevo, a propósito",
+      body: "Me mudé a Dublín y completé un **Higher Diploma in Computing Science en CCT College**, para reconstruir mi carrera en un nuevo mercado.",
+    },
+    {
+      year: "2019 · Liderando escalaciones",
+      title: "Primera vez que era mío un sistema, no solo un ticket",
+      body: "Ascendí a **Technical Support Lead**, dirigiendo un equipo de **4 ingenieros** como punto de escalación para incidentes complejos y administrando Active Directory en entornos multi-dominio. La primera vez que era mío un sistema, no solo un ticket.",
+    },
+    {
+      year: "2016 · Villarrica, Paraguay",
+      title: "La persona a la que llamabas",
+      body: "Empecé como **IT Support Technician** en Electro Info, cubriendo **30+ clientes corporativos** en sitio: hardware, redes, impresoras, lo que fallara. Un pueblo chico, sin backup. Ahí aprendí que el soporte es sobre personas, no máquinas.",
     },
   ],
 };

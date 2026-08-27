@@ -45,6 +45,18 @@ export const ui = {
     "cta.downloadCv": "Request CV",
     "cta.contact": "Contact",
     "cta.email": "Email me",
+    "cta.bookCall": "Book a call",
+
+    // Request CV page
+    "requestCv.title": "Request my CV",
+    "requestCv.lead": "Send me a quick note and I'll get back to you with the latest version of my CV within 24 hours.",
+    "requestCv.name": "Your name",
+    "requestCv.company": "Company",
+    "requestCv.role": "Role you're hiring for (optional)",
+    "requestCv.message": "Anything else you'd like to add (optional)",
+    "requestCv.submit": "Open my email to send",
+    "requestCv.note": "Clicking the button opens your default email client (Outlook, Apple Mail, Gmail) with everything pre-filled. You just hit Send.",
+    "requestCv.back": "← Back to profile",
 
     // Proof page
     "proof.title": "Proof",
@@ -99,6 +111,18 @@ export const ui = {
     "cta.downloadCv": "Solicitar CV",
     "cta.contact": "Contacto",
     "cta.email": "Escribime",
+    "cta.bookCall": "Agendar una llamada",
+
+    // Request CV page
+    "requestCv.title": "Solicitar mi CV",
+    "requestCv.lead": "Mandame una nota corta y te respondo con la última versión de mi CV en menos de 24 horas.",
+    "requestCv.name": "Tu nombre",
+    "requestCv.company": "Empresa",
+    "requestCv.role": "Puesto que estás cubriendo (opcional)",
+    "requestCv.message": "Cualquier otra cosa que quieras agregar (opcional)",
+    "requestCv.submit": "Abrir mi email para enviar",
+    "requestCv.note": "Al hacer click se abre tu cliente de email (Outlook, Apple Mail, Gmail) con todo pre-cargado. Solo tenés que apretar Enviar.",
+    "requestCv.back": "← Volver al perfil",
 
     // Proof page
     "proof.title": "Pruebas",
