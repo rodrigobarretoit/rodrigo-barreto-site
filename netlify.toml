@@ -1,0 +1,26 @@
+# Netlify build configuration.
+#
+# What this does:
+#   - Tells Netlify how to build the site (npm run build → publish /dist).
+#   - Pins Node.js 20 so builds are reproducible across environments.
+#   - Adds a few basic security headers (harmless for a static portfolio,
+#     nice-to-have for external audits / better SEO signals).
+#
+# Netlify auto-detects Astro even without this file, but pinning the config
+# here avoids "worked yesterday, broken today" if their defaults change.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Security headers applied to every response.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options   = "nosniff"
+    X-Frame-Options          = "DENY"
+    Referrer-Policy          = "strict-origin-when-cross-origin"
+    Permissions-Policy       = "camera=(), microphone=(), geolocation=()"
