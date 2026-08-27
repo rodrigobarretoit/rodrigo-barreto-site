@@ -1,17 +1,25 @@
 ---
 /*
- * Contact footer — email + LinkedIn + location + availability + CV button.
- * NO phone, NO street address (per brief). Public-safe only.
+ * Contact section — CTA cluster + meta table.
+ *
+ * Button order (left → right, top-priority first):
+ *   1. Email me           (primary — the fastest way to reach me)
+ *   2. Book a call        (secondary — Cal.com scheduler)
+ *   3. Request CV         (secondary — dedicated form page, always available)
+ *   4. Download CV        (tertiary — direct PDF download, auto-disabled if
+ *                          the file isn't in /public/cv)
+ *
+ * Meta table (right column): email · LinkedIn · location · availability.
+ * NO phone, NO street address. Public-safe only.
  */
 
-import { site } from "../data/site";
+import { site, cvExists } from "../data/site";
 import { tr, type Lang } from "../data/ui";
 
 type Props = { lang: Lang };
 const { lang } = Astro.props;
 const t = tr(lang);
 
-// The Request CV button jumps to the dedicated /request-cv page (per lang).
 const requestCvHref = lang === "en" ? "/request-cv/" : "/es/request-cv/";
 ---
 
@@ -22,12 +30,15 @@ const requestCvHref = lang === "en" ? "/request-cv/" : "/es/request-cv/";
     <div class="contact__grid">
       <div>
         <h2 class="section-title">{t("section.contact")}</h2>
-        <div style="margin-top: 1.75rem; display: flex; gap: .75rem; flex-wrap: wrap;">
+        <div class="contact__actions">
           <a href={`mailto:${site.email}`} class="btn btn--primary">{t("cta.email")}</a>
           <a href={site.scheduleUrl} class="btn btn--ghost" target="_blank" rel="noopener">
             {t("cta.bookCall")}
           </a>
-          <a href={requestCvHref} class="btn btn--ghost">{t("cta.downloadCv")}</a>
+          <a href={requestCvHref} class="btn btn--ghost">{t("cta.requestCv")}</a>
+          {cvExists && (
+            <a href={site.cvPath} class="btn btn--ghost" download>{t("cta.downloadCv")}</a>
+          )}
         </div>
       </div>
 
@@ -58,3 +69,12 @@ const requestCvHref = lang === "en" ? "/request-cv/" : "/es/request-cv/";
     </div>
   </div>
 </section>
+
+<style>
+  .contact__actions {
+    margin-top: 1.75rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+</style>

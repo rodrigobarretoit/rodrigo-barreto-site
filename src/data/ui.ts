@@ -42,10 +42,13 @@ export const ui = {
     "contact.availableNow": "Available now",
 
     // Buttons
-    "cta.downloadCv": "Request CV",
+    "cta.letsTalk": "Let's talk",
+    "cta.downloadCv": "Download CV",
+    "cta.requestCv": "Request CV",
     "cta.contact": "Contact",
     "cta.email": "Email me",
     "cta.bookCall": "Book a call",
+    "cta.cvUnavailable": "CV coming soon",
 
     // Request CV page
     "requestCv.title": "Request my CV",
@@ -68,13 +71,14 @@ export const ui = {
     "proof.title": "Proof",
     "proof.lead": "Documentation, labs and content I've produced across enterprise and MSP IT support.",
     "proof.filterAll": "All",
-    "proof.filterLabs": "Labs & Projects",
-    "proof.filterKb": "Knowledge Base",
-    "proof.filterVideo": "Video",
+    "proof.filterCase": "Case studies",
     "proof.filterCommunity": "Community",
     "proof.back": "← Back to profile",
     "proof.readMore": "Read more",
     "proof.viewLink": "View",
+    "proof.caseChallenge": "Challenge",
+    "proof.caseWhat": "What I did",
+    "proof.caseResult": "Result",
 
     // Theme toggle
     "theme.light": "Switch to light theme",
@@ -114,10 +118,13 @@ export const ui = {
     "contact.availableNow": "Disponible ahora",
 
     // Buttons
-    "cta.downloadCv": "Solicitar CV",
+    "cta.letsTalk": "Hablemos",
+    "cta.downloadCv": "Descargar CV",
+    "cta.requestCv": "Solicitar CV",
     "cta.contact": "Contacto",
     "cta.email": "Escribime",
     "cta.bookCall": "Agendar una llamada",
+    "cta.cvUnavailable": "CV próximamente",
 
     // Request CV page
     "requestCv.title": "Solicitar mi CV",
@@ -140,13 +147,14 @@ export const ui = {
     "proof.title": "Pruebas",
     "proof.lead": "Documentación, labs y contenido que he producido en soporte IT enterprise y MSP.",
     "proof.filterAll": "Todo",
-    "proof.filterLabs": "Labs y proyectos",
-    "proof.filterKb": "Base de conocimiento",
-    "proof.filterVideo": "Video",
+    "proof.filterCase": "Casos",
     "proof.filterCommunity": "Comunidad",
     "proof.back": "← Volver al perfil",
     "proof.readMore": "Leer más",
     "proof.viewLink": "Ver",
+    "proof.caseChallenge": "Desafío",
+    "proof.caseWhat": "Qué hice",
+    "proof.caseResult": "Resultado",
 
     // Theme toggle
     "theme.light": "Cambiar a tema claro",

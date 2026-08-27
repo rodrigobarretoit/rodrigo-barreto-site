@@ -2,9 +2,13 @@
 /*
  * Proof page — English.
  *
- * Loads all English proof cards from Content Collections,
- * filters out drafts, sorts by `order`, and renders a grid.
- * Category filter is client-side (see /scripts/main.js).
+ * Loads all English proof cards from Content Collections, filters out drafts,
+ * sorts by `order`, and renders a grid. Category filter is client-side
+ * (see /scripts/main.js).
+ *
+ * Two card layouts:
+ *   - type: "case"      → Challenge / What I did / Result mini case study
+ *   - type: "community" → Free-form summary paragraph
  */
 
 import { getCollection } from "astro:content";
@@ -19,24 +23,22 @@ const t = tr(lang);
 
 const title = "Proof — Rodrigo Barreto";
 const description =
-  "Documentation, labs and content Rodrigo Barreto has produced across enterprise and MSP IT support.";
+  "Mini case studies from Rodrigo Barreto's work in enterprise IT support, endpoint management and Microsoft 365 administration.";
 
-// Load EN cards only; sort by `order` then title.
 const entries = (await getCollection("proof", ({ id, data }) =>
   id.startsWith("en/") && !data.draft
 )).sort((a, b) =>
   a.data.order - b.data.order || a.data.title.localeCompare(b.data.title)
 );
 
-// Filter buttons — keep in sync with the "type" enum in content/config.ts
 const filters = [
   { key: "all", label: t("proof.filterAll") },
-  { key: "labs", label: t("proof.filterLabs") },
+  { key: "case", label: t("proof.filterCase") },
   { key: "community", label: t("proof.filterCommunity") },
 ];
 
 const typeLabels: Record<string, string> = {
-  labs: t("proof.filterLabs"),
+  case: t("proof.filterCase"),
   community: t("proof.filterCommunity"),
 };
 ---
@@ -67,12 +69,38 @@ const typeLabels: Record<string, string> = {
         <article class="proof-card reveal" data-type={entry.data.type}>
           <span class="proof-card__type">{typeLabels[entry.data.type] ?? entry.data.type}</span>
           <h3 class="proof-card__title">{entry.data.title}</h3>
-          <p class="proof-card__summary">{entry.data.summary}</p>
+
+          {entry.data.type === "case" ? (
+            <div class="proof-card__case">
+              {entry.data.challenge && (
+                <div class="proof-card__row">
+                  <span class="proof-card__row-label">{t("proof.caseChallenge")}</span>
+                  <p class="proof-card__row-text">{entry.data.challenge}</p>
+                </div>
+              )}
+              {entry.data.what && (
+                <div class="proof-card__row">
+                  <span class="proof-card__row-label">{t("proof.caseWhat")}</span>
+                  <p class="proof-card__row-text">{entry.data.what}</p>
+                </div>
+              )}
+              {entry.data.result && (
+                <div class="proof-card__row proof-card__row--result">
+                  <span class="proof-card__row-label">{t("proof.caseResult")}</span>
+                  <p class="proof-card__row-text">{entry.data.result}</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p class="proof-card__summary">{entry.data.summary}</p>
+          )}
+
           <div class="proof-card__tags">
             {entry.data.tags.map((tag) => (
               <span class="proof-card__tag">{tag}</span>
             ))}
           </div>
+
           <div class="proof-card__footer">
             <span class="proof-card__date">{entry.data.date}</span>
             <div class="proof-card__links">

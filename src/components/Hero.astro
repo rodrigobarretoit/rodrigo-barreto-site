@@ -2,18 +2,26 @@
 /*
  * Hero section — top of the profile page.
  *
- * Renders: role eyebrow, big name (with amber surname), pitch,
- * availability badge, CTAs, and a portrait card on the right.
+ * Layout:
+ *   - Eyebrow (role badge)
+ *   - Name (H1, surname in amber)
+ *   - Subtitle (positioning line — Enterprise IT Support & M365 Administration)
+ *   - Pitch (2-3 paragraphs, first one bold as lead)
+ *   - Availability badge
+ *   - CTAs — primary "Let's talk" → #contact; secondary "Download CV" →
+ *     direct PDF download (auto-disabled if the file isn't in /public/cv).
+ *   - Portrait card (single static photo)
  *
- * The portrait is a PLACEHOLDER with the RB initials.
- * When you have a real photo:
- *   1. Save it (JPG or WebP, portrait 3:4 works best) at
- *      /public/img/rodrigo-portrait.jpg
- *   2. In this file, uncomment the <img> below and delete the
- *      "hero__portrait-initials" span.
+ * Photo:
+ *   The <img> below points to /img/rodrigo-portrait.png. If the file is
+ *   missing the browser will show a broken-image icon — drop the photo at
+ *   /public/img/rodrigo-portrait.png (or update the src if you use a different
+ *   filename/format).
  */
 
-import { site } from "../data/site";
+import fs from "node:fs";
+import path from "node:path";
+import { site, cvExists } from "../data/site";
 import { hero } from "../data/content";
 import { tr, type Lang } from "../data/ui";
 
@@ -21,6 +29,17 @@ type Props = { lang: Lang };
 const { lang } = Astro.props;
 const t = tr(lang);
 const h = hero[lang];
+
+// If the portrait file isn't in /public/img, show a clear placeholder
+// so the visitor sees something intentional instead of a broken image icon.
+const portraitSrc = "/img/rodrigo-portrait.png";
+const portraitExists = (() => {
+  try {
+    return fs.existsSync(path.join(process.cwd(), "public", portraitSrc));
+  } catch {
+    return false;
+  }
+})();
 ---
 
 <section class="hero container">
@@ -32,6 +51,7 @@ const h = hero[lang];
         {" "}
         <span class="hero__title-accent">{h.lastName}</span>
       </h1>
+      <p class="hero__subtitle">{h.subtitle}</p>
       {h.pitch.map((paragraph, i) => (
         <p class:list={["hero__pitch", i === 0 && "hero__pitch--lead"]}>
           {paragraph}
@@ -41,20 +61,45 @@ const h = hero[lang];
         <span class="hero__dot" aria-hidden="true"></span>
         <span>{h.availability}</span>
       </div>
+
       <div class="hero__actions">
-        <a href={lang === "en" ? "/request-cv/" : "/es/request-cv/"} class="btn btn--primary">{t("cta.downloadCv")}</a>
-        <a href="#contact" class="btn btn--ghost">{t("cta.contact")}</a>
+        <!-- Primary: contact-first CTA -->
+        <a href="#contact" class="btn btn--primary">{t("cta.letsTalk")}</a>
+
+        <!-- Secondary: direct CV download. Auto-disabled if the PDF isn't
+             present in /public/cv/ so we never ship a 404. -->
+        {cvExists ? (
+          <a href={site.cvPath} class="btn btn--ghost" download>
+            {t("cta.downloadCv")}
+          </a>
+        ) : (
+          <span
+            class="btn btn--ghost is-disabled"
+            aria-disabled="true"
+            title={`Drop the file at public${site.cvPath} to enable this button.`}
+          >
+            {t("cta.cvUnavailable")}
+          </span>
+        )}
       </div>
     </div>
 
-    <!-- Portrait card — single professional photo, no hover swap. -->
+    <!-- Portrait card — single static photo, always visible on desktop and mobile. -->
     <div class="hero__portrait" aria-label={`Portrait of ${site.name}`}>
-      <img
-        src="/img/rodrigo-portrait.png"
-        alt={`${site.name} — ${site.role}`}
-        class="hero__portrait-img"
-        loading="eager"
-      />
+      {portraitExists ? (
+        <img
+          src={portraitSrc}
+          alt={`${site.name} — ${site.role}`}
+          class="hero__portrait-img"
+          loading="eager"
+        />
+      ) : (
+        <div class="hero__portrait-placeholder" aria-live="polite">
+          <strong>PLACEHOLDER</strong>
+          <span>Upload photo to:</span>
+          <code>public{portraitSrc}</code>
+        </div>
+      )}
       <div class="hero__portrait-caption">
         <span>{site.name}</span>
         <span>{site.location}</span>
@@ -62,3 +107,42 @@ const h = hero[lang];
     </div>
   </div>
 </section>
+
+<style>
+  /* Disabled state for CTA (when a file dependency is missing) */
+  .btn.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: auto;
+  }
+  .btn.is-disabled:hover { transform: none; }
+
+  /* Missing-photo placeholder — clear signal to upload the file */
+  .hero__portrait-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    gap: 0.35rem;
+    padding: 1rem;
+    z-index: 1;
+  }
+  .hero__portrait-placeholder strong {
+    color: var(--accent);
+    letter-spacing: 0.24em;
+    font-size: 0.72rem;
+  }
+  .hero__portrait-placeholder span {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+  .hero__portrait-placeholder code {
+    color: var(--text);
+    background: rgba(0, 0, 0, 0.35);
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+</style>

@@ -20,8 +20,10 @@ import type { Lang } from "./ui";
 // -----------------------------------------------------------
 /*
  * `pitch` is an ARRAY of paragraphs — the first one renders as a bold "lead"
- * headline, the rest as regular supporting text. To add or reorder lines,
- * just edit the strings in the array (both `en` and `es`).
+ * headline, the rest as regular supporting text.
+ *
+ * `subtitle` renders between the name and the pitch as a small positioning
+ * line (Enterprise IT Support and Microsoft 365 Administration).
  */
 export const hero = {
   en: {
@@ -29,10 +31,10 @@ export const hero = {
     // The name renders in two spans so we can highlight the surname in amber.
     firstName: "Rodrigo",
     lastName: "Barreto",
+    subtitle: "Enterprise IT Support and Microsoft 365 Administration",
     pitch: [
-      "10+ years of experience delivering reliable IT at enterprise scale.",
-      "Supporting 500+ users across 8 countries, maintaining 100% Windows Autopilot compliance, and managing IT operations in global environments.",
-      "Currently leading a company-wide PC refresh for a global reinsurer's Dublin office. Combining hands-on technical expertise with large-scale IT delivery.",
+      "10+ years delivering reliable IT at enterprise scale.",
+      "I keep corporate environments running: identity, endpoints and Microsoft 365, from first contact to full resolution.",
     ],
     availability:
       "Available now · Dublin · EU citizen, full right to work in Ireland and the EU",
@@ -41,10 +43,10 @@ export const hero = {
     eyebrow: "IT Support Engineer",
     firstName: "Rodrigo",
     lastName: "Barreto",
+    subtitle: "Soporte IT enterprise y administración de Microsoft 365",
     pitch: [
       "Más de 10 años entregando IT confiable a escala enterprise.",
-      "Soporte a 500+ usuarios en 8 países, 100% de compliance en Windows Autopilot y gestión de operaciones IT en entornos globales.",
-      "Actualmente liderando un refresh de PC a nivel compañía para la oficina de Dublín de una reaseguradora global. Combinando expertise técnico hands-on con entrega IT a gran escala.",
+      "Mantengo entornos corporativos funcionando: identidad, endpoints y Microsoft 365, desde el primer contacto hasta la resolución completa.",
     ],
     availability:
       "Disponible ahora · Dublín · Ciudadano UE, con derecho pleno a trabajar en Irlanda y la UE",
@@ -139,6 +141,11 @@ export const timeline: Record<Lang, TimelineItem[]> = {
       title: "The person you called",
       body: "I started as an **IT Support Technician** at Electro Info, covering **30+ business clients** on site: hardware, networking, printers, whatever broke. Small town, no backup. That is where I learned support is about people, not machines.",
     },
+    {
+      year: "Pre-2016 · Where it started",
+      title: "Electronic security",
+      body: "**15+ years** in electronic security before corporate IT: CCTV, access control, alarms. That's where I learned to install, troubleshoot and hand over the systems people rely on.",
+    },
   ],
 
   es: [
@@ -176,6 +183,11 @@ export const timeline: Record<Lang, TimelineItem[]> = {
       year: "2016 · Villarrica, Paraguay",
       title: "La persona a la que llamabas",
       body: "Empecé como **IT Support Technician** en Electro Info, cubriendo **30+ clientes corporativos** en sitio: hardware, redes, impresoras, lo que fallara. Un pueblo chico, sin backup. Ahí aprendí que el soporte es sobre personas, no máquinas.",
+    },
+    {
+      year: "Pre-2016 · Donde empezó todo",
+      title: "Electrónica de seguridad",
+      body: "**Más de 15 años** en electrónica de seguridad antes del IT corporativo: CCTV, control de acceso, alarmas. Ahí aprendí a instalar, resolver y entregar los sistemas de los que la gente depende.",
     },
   ],
 };
