@@ -2,6 +2,13 @@
 /*
  * Home / Profile page — English.
  * Assembles the sections in the order defined by the brief.
+ *
+ * SEO note:
+ *   The <title> and description below intentionally use "IT Support Specialist"
+ *   as a search keyword because that's what recruiters type into Google far
+ *   more often than "IT Support Engineer" (which is the actual role label
+ *   shown in the UI). The site copy stays consistent; only the meta strings
+ *   target the higher-volume query.
  */
 
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -14,14 +21,53 @@ import Certifications from "../components/Certifications.astro";
 import ClosingStatement from "../components/ClosingStatement.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
 
 const lang = "en" as const;
-const title = "Rodrigo Barreto — IT Support Engineer · Dublin";
+const title = "Rodrigo Barreto | IT Support Specialist in Dublin";
 const description =
-  "Rodrigo Barreto — IT Support Engineer based in Dublin. From a small town in Paraguay to supporting 500+ users across 8 countries. Microsoft 365, Intune, Entra ID, Active Directory. Available now.";
+  "IT Support Specialist in Dublin with 10+ years across Microsoft 365, Intune and Entra ID. Real projects in endpoint management, identity and access, and IT asset lifecycle.";
+
+// Schema.org Person — the single most important signal for people
+// searching Rodrigo's name in Google. Rendered as JSON-LD in <head>.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Rodrigo Manuel Barreto Roa",
+  alternateName: "Rodrigo Barreto",
+  jobTitle: "IT Support Specialist",
+  url: `https://${site.domain}`,
+  sameAs: [site.linkedin.href],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Dublin",
+    addressCountry: "IE",
+  },
+  knowsAbout: [
+    "Microsoft 365",
+    "Entra ID",
+    "Microsoft Intune",
+    "Endpoint Management",
+    "Identity and Access Management",
+    "IT Support",
+    "ITIL",
+    "IT Asset Lifecycle",
+  ],
+  knowsLanguage: ["Spanish", "English", "Portuguese"],
+  alumniOf: [
+    "CCT College Dublin",
+    "Universidad Nacional de Villarrica",
+  ],
+};
 ---
 
-<BaseLayout lang={lang} title={title} description={description} path={Astro.url.pathname}>
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={description}
+  path={Astro.url.pathname}
+  jsonLd={jsonLd}
+>
   <Nav slot="nav" lang={lang} path={Astro.url.pathname} page="profile" />
 
   <Hero lang={lang} />

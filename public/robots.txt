@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rodrigobarretoit.com/sitemap-index.xml

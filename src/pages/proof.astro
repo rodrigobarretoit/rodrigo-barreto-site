@@ -21,9 +21,9 @@ import { site } from "../data/site";
 const lang = "en" as const;
 const t = tr(lang);
 
-const title = "Proof — Rodrigo Barreto";
+const title = "Rodrigo Barreto | Case Studies in IT Support and Microsoft 365";
 const description =
-  "Mini case studies from Rodrigo Barreto's work in enterprise IT support, endpoint management and Microsoft 365 administration.";
+  "Mini case studies from Rodrigo Barreto: PC refresh in Dublin financial services, endpoint management at scale, multi-tenant Microsoft 365 administration, and documentation-led resolution.";
 
 const entries = (await getCollection("proof", ({ id, data }) =>
   id.startsWith("en/") && !data.draft

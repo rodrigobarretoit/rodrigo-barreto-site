@@ -3,7 +3,9 @@
  * Base layout — every page uses this.
  *
  * Responsibilities:
- *   1. <head> with SEO tags (title, description, Open Graph).
+ *   1. <head> with SEO tags (title, description, canonical, hreflang,
+ *      Open Graph, Twitter cards, optional JSON-LD structured data,
+ *      optional noindex for form-submit thank-you pages).
  *   2. Inline theme-init script (runs BEFORE render to avoid a flash
  *      of the wrong theme when the user has picked light on a dark default).
  *   3. Loads the fonts and the global stylesheet.
@@ -11,10 +13,13 @@
  *   5. Wraps content in a semantic <main>.
  *
  * Props:
- *   - lang: "en" | "es" — from the page.
- *   - title: string — used for <title> and Open Graph.
- *   - description: string — used for meta description and OG.
- *   - path: string — current URL path, so canonical + hreflang alternates work.
+ *   - lang: "en" | "es"
+ *   - title, description: used for <title>, meta description, OG and Twitter.
+ *   - path: current URL path — powers canonical + hreflang alternates.
+ *   - jsonLd (optional): Schema.org object rendered as <script
+ *     type="application/ld+json">. Home pages pass a Person object.
+ *   - noindex (optional): if true, adds <meta name="robots" content="noindex">.
+ *     Use on non-SEO pages (thank-you page after a form submit).
  */
 
 import "../styles/global.css";
@@ -25,9 +30,11 @@ type Props = {
   title: string;
   description: string;
   path: string;
+  jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
 };
 
-const { lang, title, description, path } = Astro.props;
+const { lang, title, description, path, jsonLd, noindex } = Astro.props;
 const url = `https://${site.domain}${path}`;
 
 // Compute the "other language" URL for the hreflang alternate link.
@@ -43,6 +50,11 @@ function altPath(currentLang: "en" | "es", currentPath: string): string {
 }
 const otherLang = lang === "en" ? "es" : "en";
 const otherUrl = `https://${site.domain}${altPath(lang, path)}`;
+const enUrl = lang === "en" ? url : otherUrl;
+const esUrl = lang === "es" ? url : otherUrl;
+
+// Absolute URL for the OG / Twitter image (1200×630 SVG in /public).
+const ogImageUrl = `https://${site.domain}/og-image.svg`;
 ---
 
 <!doctype html>
@@ -53,29 +65,39 @@ const otherUrl = `https://${site.domain}${altPath(lang, path)}`;
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={site.name} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
 
     <!-- Canonical + hreflang alternates for SEO -->
     <link rel="canonical" href={url} />
-    <link rel="alternate" hreflang={lang} href={url} />
-    <link rel="alternate" hreflang={otherLang} href={otherUrl} />
-    <link rel="alternate" hreflang="x-default" href={`https://${site.domain}/`} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="es" href={esUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
 
-    <!-- Open Graph — makes the LinkedIn preview look nice -->
+    <!-- Open Graph — controls the preview in LinkedIn, WhatsApp, Slack, iMessage… -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url} />
     <meta property="og:locale" content={lang === "en" ? "en_IE" : "es_ES"} />
-    <meta property="og:image" content={`https://${site.domain}/og-image.png`} />
+    <meta property="og:locale:alternate" content={lang === "en" ? "es_ES" : "en_IE"} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.role}, ${site.location}`} />
 
-    <!-- Twitter/X card fallback -->
+    <!-- Twitter / X card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={`${site.name} — ${site.role}, ${site.location}`} />
 
     <!-- Favicon -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Sitemap discovery hint (robots.txt is the canonical source) -->
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
     <!-- Fonts: Inter (sans) + Fraunces (serif). Loaded from Google Fonts. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -84,6 +106,11 @@ const otherUrl = `https://${site.domain}${altPath(lang, path)}`;
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,400;0,500;1,400&display=swap"
     />
+
+    {/* Optional Schema.org structured data (JSON-LD). Home pages pass a Person object. */}
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
 
     <!--
       Theme-init: runs BEFORE the body paints, so users who have chosen
