@@ -25,7 +25,6 @@ export const ui = {
     "section.timeline": "The story",
     "section.skills": "Skills",
     "section.certs": "Certifications",
-    "section.certsLearning": "Currently studying: MD-102 Microsoft Endpoint Administrator",
     "section.contact": "Contact",
 
     // Quick facts labels
@@ -99,7 +98,6 @@ export const ui = {
     "section.timeline": "La historia",
     "section.skills": "Skills",
     "section.certs": "Certificaciones",
-    "section.certsLearning": "Cursando actualmente: MD-102 Microsoft Endpoint Administrator",
     "section.contact": "Contacto",
 
     // Quick facts labels
