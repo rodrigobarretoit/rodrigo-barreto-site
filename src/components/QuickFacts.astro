@@ -1,0 +1,26 @@
+---
+/*
+ * Quick-facts strip right below the hero.
+ * Four scannable columns for a recruiter to grasp fit in one glance.
+ */
+
+import { quickFacts } from "../data/content";
+import type { Lang } from "../data/ui";
+
+type Props = { lang: Lang };
+const { lang } = Astro.props;
+const facts = quickFacts[lang];
+---
+
+<section class="facts" aria-label="Quick facts">
+  <div class="container">
+    <div class="facts__grid">
+      {facts.map((f) => (
+        <div class="facts__item">
+          <h4>{f.label}</h4>
+          <p>{f.value}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

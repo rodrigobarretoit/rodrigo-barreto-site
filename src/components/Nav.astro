@@ -1,0 +1,129 @@
+---
+/*
+ * Fixed top navigation.
+ *
+ * Contains: initials brand + links + Download CV / Contact CTAs
+ * + language toggle (EN/ES) + theme toggle (light/dark) + mobile burger.
+ *
+ * Props:
+ *   - lang: current language, so labels + language-toggle link work.
+ *   - path: current URL path, needed to build the "other language" link.
+ *   - page: "profile" | "proof" — highlights the active nav link.
+ */
+
+import { site, cvRequestMailto } from "../data/site";
+import { tr, type Lang } from "../data/ui";
+
+type Props = { lang: Lang; path: string; page: "profile" | "proof" };
+const { lang, path, page } = Astro.props;
+const t = tr(lang);
+
+// Build language-toggle target: same page, other language.
+function altPath(currentLang: Lang, currentPath: string): string {
+  if (currentLang === "en") {
+    return currentPath === "/" ? "/es/" : `/es${currentPath}`;
+  }
+  return currentPath.replace(/^\/es/, "") || "/";
+}
+const esUrl = lang === "en" ? altPath("en", path) : path;
+const enUrl = lang === "es" ? altPath("es", path) : path;
+
+// Where the "Profile" and "Proof" links go, based on current lang.
+const profileHref = lang === "en" ? "/" : "/es/";
+const proofHref = lang === "en" ? "/proof/" : "/es/proof/";
+---
+
+<nav class="nav" id="nav" aria-label="Primary">
+  <div class="container nav__inner">
+    <a href={profileHref} class="nav__brand" aria-label={`${site.name} — home`}>
+      <span class="nav__brand-dot" aria-hidden="true"></span>
+      <span>{site.initials}</span>
+    </a>
+
+    <div class="nav__links" id="nav-links">
+      <a
+        href={profileHref}
+        class="nav__link"
+        aria-current={page === "profile" ? "page" : undefined}
+      >
+        {t("nav.profile")}
+      </a>
+      <a
+        href={proofHref}
+        class="nav__link"
+        aria-current={page === "proof" ? "page" : undefined}
+      >
+        {t("nav.proof")}
+      </a>
+    </div>
+
+    <div class="nav__ctas">
+      <a href={cvRequestMailto} class="btn btn--ghost">{t("nav.cv")}</a>
+      <a href={`mailto:${site.email}`} class="btn btn--primary">{t("nav.contact")}</a>
+
+      <!--
+        Language toggle. Both links exist; the JS updates localStorage
+        when either is clicked so the preference survives visits.
+      -->
+      <div class="nav__toggle-group" role="group" aria-label="Language">
+        <a
+          href={enUrl}
+          aria-pressed={lang === "en"}
+          data-lang="en"
+        >EN</a>
+        <a
+          href={esUrl}
+          aria-pressed={lang === "es"}
+          data-lang="es"
+        >ES</a>
+      </div>
+
+      <button
+        type="button"
+        class="nav__theme-btn"
+        id="theme-toggle"
+        aria-label={t("theme.light")}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="nav__burger"
+        id="nav-burger"
+        aria-controls="nav-links"
+        aria-expanded="false"
+        aria-label={t("nav.menu")}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6"  x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* Anchors inside the language toggle need to look like buttons */
+  .nav__toggle-group a {
+    display: inline-block;
+    padding: .3rem .75rem;
+    border-radius: 999px;
+    color: var(--text-muted);
+    font: 500 .78rem var(--font-sans);
+    text-decoration: none;
+    transition: background .2s var(--ease-out), color .2s var(--ease-out);
+  }
+  .nav__toggle-group a[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--navy-900);
+  }
+</style>

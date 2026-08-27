@@ -1,0 +1,33 @@
+---
+/*
+ * Certifications — ONLY the three real ones.
+ * "Currently studying" goes below as separate learning line.
+ */
+
+import { certs } from "../data/content";
+import { tr, type Lang } from "../data/ui";
+
+type Props = { lang: Lang };
+const { lang } = Astro.props;
+const t = tr(lang);
+const items = certs[lang];
+---
+
+<section id="certifications" aria-label={t("section.certs")}>
+  <div class="container">
+    <span class="section-eyebrow">{t("section.certs")}</span>
+    <h2 class="section-title">{t("section.certs")}</h2>
+
+    <div class="certs">
+      {items.map((c) => (
+        <div class="certs__item reveal">
+          <span class="certs__badge">{c.badge}</span>
+          <span class="certs__name">{c.name}</span>
+          <span class="certs__issuer">{c.issuer}</span>
+        </div>
+      ))}
+    </div>
+
+    <p class="certs__learning">{t("section.certsLearning")}</p>
+  </div>
+</section>

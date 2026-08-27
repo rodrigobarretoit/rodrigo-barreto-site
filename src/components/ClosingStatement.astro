@@ -1,0 +1,18 @@
+---
+/*
+ * Closing statement — centered italic quote, sets the tone before Contact.
+ */
+import { closing } from "../data/content";
+import type { Lang } from "../data/ui";
+
+type Props = { lang: Lang };
+const { lang } = Astro.props;
+---
+
+<section class="closing" aria-label="Closing statement">
+  <div class="container">
+    <blockquote class="closing__quote reveal">
+      {closing[lang]}
+    </blockquote>
+  </div>
+</section>

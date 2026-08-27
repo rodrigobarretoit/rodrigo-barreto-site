@@ -1,0 +1,54 @@
+---
+/*
+ * Contact footer — email + LinkedIn + location + availability + CV button.
+ * NO phone, NO street address (per brief). Public-safe only.
+ */
+
+import { site, cvRequestMailto } from "../data/site";
+import { tr, type Lang } from "../data/ui";
+
+type Props = { lang: Lang };
+const { lang } = Astro.props;
+const t = tr(lang);
+---
+
+<section id="contact" class="contact" aria-label={t("section.contact")}>
+  <div class="container">
+    <span class="section-eyebrow">{t("section.contact")}</span>
+
+    <div class="contact__grid">
+      <div>
+        <h2 class="section-title">{t("section.contact")}</h2>
+        <div style="margin-top: 1.75rem; display: flex; gap: .75rem; flex-wrap: wrap;">
+          <a href={cvRequestMailto} class="btn btn--primary">{t("cta.downloadCv")}</a>
+          <a href={`mailto:${site.email}`} class="btn btn--ghost">{t("cta.email")}</a>
+        </div>
+      </div>
+
+      <div class="contact__meta">
+        <div class="contact__row">
+          <span class="contact__label">{t("contact.email")}</span>
+          <span class="contact__value">
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </span>
+        </div>
+        <div class="contact__row">
+          <span class="contact__label">{t("contact.linkedin")}</span>
+          <span class="contact__value">
+            <a href={site.linkedin.href} target="_blank" rel="noopener">
+              {site.linkedin.label}
+            </a>
+          </span>
+        </div>
+        <div class="contact__row">
+          <span class="contact__label">{t("contact.location")}</span>
+          <span class="contact__value">{site.location}</span>
+        </div>
+        <div class="contact__row">
+          <span class="contact__label">{t("contact.availability")}</span>
+          <span class="contact__value">{t("contact.availableNow")}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

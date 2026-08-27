@@ -1,0 +1,35 @@
+---
+/*
+ * Home / Profile page — English.
+ * Assembles the sections in the order defined by the brief.
+ */
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import QuickFacts from "../components/QuickFacts.astro";
+import Timeline from "../components/Timeline.astro";
+import Skills from "../components/Skills.astro";
+import Certifications from "../components/Certifications.astro";
+import ClosingStatement from "../components/ClosingStatement.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
+
+const lang = "en" as const;
+const title = "Rodrigo Barreto — IT Support Engineer · Dublin";
+const description =
+  "Rodrigo Barreto — IT Support Engineer based in Dublin. From a small town in Paraguay to supporting 500+ users across 8 countries. Microsoft 365, Intune, Entra ID, Active Directory. Available now.";
+---
+
+<BaseLayout lang={lang} title={title} description={description} path={Astro.url.pathname}>
+  <Nav slot="nav" lang={lang} path={Astro.url.pathname} page="profile" />
+
+  <Hero lang={lang} />
+  <QuickFacts lang={lang} />
+  <Timeline lang={lang} />
+  <Skills lang={lang} />
+  <Certifications lang={lang} />
+  <ClosingStatement lang={lang} />
+  <Contact lang={lang} />
+  <Footer lang={lang} />
+</BaseLayout>

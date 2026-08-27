@@ -1,0 +1,15 @@
+---
+import { site } from "../data/site";
+import { tr, type Lang } from "../data/ui";
+
+type Props = { lang: Lang };
+const { lang } = Astro.props;
+const t = tr(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container">
+    <p>© {year} {site.name} · {t("footer.tagline")}</p>
+  </div>
+</footer>

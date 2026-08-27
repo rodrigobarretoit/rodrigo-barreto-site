@@ -1,0 +1,94 @@
+---
+/*
+ * Página Pruebas — Español.
+ * Espejo de proof.astro con lang="es" y contenido ES.
+ */
+
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import { tr } from "../../data/ui";
+import { site } from "../../data/site";
+
+const lang = "es" as const;
+const t = tr(lang);
+
+const title = "Pruebas — Rodrigo Barreto";
+const description =
+  "Documentación, labs y contenido que Rodrigo Barreto ha producido en soporte IT enterprise y MSP.";
+
+const entries = (await getCollection("proof", ({ id, data }) =>
+  id.startsWith("es/") && !data.draft
+)).sort((a, b) =>
+  a.data.order - b.data.order || a.data.title.localeCompare(b.data.title)
+);
+
+const filters = [
+  { key: "all", label: t("proof.filterAll") },
+  { key: "labs", label: t("proof.filterLabs") },
+  { key: "community", label: t("proof.filterCommunity") },
+];
+
+const typeLabels: Record<string, string> = {
+  labs: t("proof.filterLabs"),
+  community: t("proof.filterCommunity"),
+};
+---
+
+<BaseLayout lang={lang} title={title} description={description} path={Astro.url.pathname}>
+  <Nav slot="nav" lang={lang} path={Astro.url.pathname} page="proof" />
+
+  <section class="proof-header container">
+    <span class="section-eyebrow">{t("proof.title")}</span>
+    <h1>{t("proof.title")}</h1>
+    <p>{t("proof.lead")}</p>
+  </section>
+
+  <div class="container">
+    <div class="proof-filters" role="group" aria-label="Filtrar">
+      {filters.map((f, i) => (
+        <button
+          type="button"
+          class="proof-filter"
+          data-filter={f.key}
+          aria-pressed={i === 0}
+        >{f.label}</button>
+      ))}
+    </div>
+
+    <div class="proof-grid" id="proof-grid">
+      {entries.map((entry) => (
+        <article class="proof-card reveal" data-type={entry.data.type}>
+          <span class="proof-card__type">{typeLabels[entry.data.type] ?? entry.data.type}</span>
+          <h3 class="proof-card__title">{entry.data.title}</h3>
+          <p class="proof-card__summary">{entry.data.summary}</p>
+          <div class="proof-card__tags">
+            {entry.data.tags.map((tag) => (
+              <span class="proof-card__tag">{tag}</span>
+            ))}
+          </div>
+          <div class="proof-card__footer">
+            <span class="proof-card__date">{entry.data.date}</span>
+            <div class="proof-card__links">
+              {(entry.data.links ?? []).map((link) => (
+                <a href={link.href} class="proof-card__link"
+                   target={link.href.startsWith("http") ? "_blank" : undefined}
+                   rel={link.href.startsWith("http") ? "noopener" : undefined}>
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="proof-back">
+      <a href="/es/">{t("proof.back")}</a>
+      <span>{site.name} · {site.domain}</span>
+    </div>
+  </div>
+
+  <Footer lang={lang} />
+</BaseLayout>

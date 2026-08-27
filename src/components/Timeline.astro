@@ -1,0 +1,42 @@
+---
+/*
+ * Career timeline — first-person milestones with metrics.
+ *
+ * Body text supports **bold** via double-asterisks (see content.ts).
+ * We convert that to <strong> here with a small regex, so writers
+ * don't have to touch HTML.
+ */
+
+import { timeline } from "../data/content";
+import { tr, type Lang } from "../data/ui";
+
+type Props = { lang: Lang };
+const { lang } = Astro.props;
+const t = tr(lang);
+const items = timeline[lang];
+
+// Escape HTML then reinstate our **bold** markers as <strong>.
+function renderBody(body: string): string {
+  const esc = body
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  return esc.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+}
+---
+
+<section id="story" aria-label={t("section.timeline")}>
+  <div class="container">
+    <span class="section-eyebrow">{t("section.timeline")}</span>
+
+    <ol class="timeline">
+      {items.map((item) => (
+        <li class="timeline__item reveal">
+          <span class="timeline__year">{item.year}</span>
+          <h3 class="timeline__title">{item.title}</h3>
+          <p class="timeline__body" set:html={renderBody(item.body)}></p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

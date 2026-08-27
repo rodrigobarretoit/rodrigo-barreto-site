@@ -1,0 +1,124 @@
+---
+/*
+ * Base layout — every page uses this.
+ *
+ * Responsibilities:
+ *   1. <head> with SEO tags (title, description, Open Graph).
+ *   2. Inline theme-init script (runs BEFORE render to avoid a flash
+ *      of the wrong theme when the user has picked light on a dark default).
+ *   3. Loads the fonts and the global stylesheet.
+ *   4. Loads the interactive JS (theme toggle, filters, reveal on scroll).
+ *   5. Wraps content in a semantic <main>.
+ *
+ * Props:
+ *   - lang: "en" | "es" — from the page.
+ *   - title: string — used for <title> and Open Graph.
+ *   - description: string — used for meta description and OG.
+ *   - path: string — current URL path, so canonical + hreflang alternates work.
+ */
+
+import "../styles/global.css";
+import { site } from "../data/site";
+
+type Props = {
+  lang: "en" | "es";
+  title: string;
+  description: string;
+  path: string;
+};
+
+const { lang, title, description, path } = Astro.props;
+const url = `https://${site.domain}${path}`;
+
+// Compute the "other language" URL for the hreflang alternate link.
+// Path shape: "/proof/" (EN) <-> "/es/proof/" (ES). Also "/" <-> "/es/".
+function altPath(currentLang: "en" | "es", currentPath: string): string {
+  if (currentLang === "en") {
+    // add /es prefix
+    return currentPath === "/" ? "/es/" : `/es${currentPath}`;
+  } else {
+    // strip /es prefix
+    return currentPath.replace(/^\/es/, "") || "/";
+  }
+}
+const otherLang = lang === "en" ? "es" : "en";
+const otherUrl = `https://${site.domain}${altPath(lang, path)}`;
+---
+
+<!doctype html>
+<html lang={lang} data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={site.name} />
+
+    <!-- Canonical + hreflang alternates for SEO -->
+    <link rel="canonical" href={url} />
+    <link rel="alternate" hreflang={lang} href={url} />
+    <link rel="alternate" hreflang={otherLang} href={otherUrl} />
+    <link rel="alternate" hreflang="x-default" href={`https://${site.domain}/`} />
+
+    <!-- Open Graph — makes the LinkedIn preview look nice -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:locale" content={lang === "en" ? "en_IE" : "es_ES"} />
+    <meta property="og:image" content={`https://${site.domain}/og-image.png`} />
+
+    <!-- Twitter/X card fallback -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Fonts: Inter (sans) + Fraunces (serif). Loaded from Google Fonts. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,400;0,500;1,400&display=swap"
+    />
+
+    <!--
+      Theme-init: runs BEFORE the body paints, so users who have chosen
+      light or dark previously never see the wrong theme flash for a
+      fraction of a second.
+    -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem("rb-theme");
+          if (saved === "light" || saved === "dark") {
+            document.documentElement.setAttribute("data-theme", saved);
+          }
+          // Language redirect: if the visitor previously picked Spanish,
+          // and they land on the English root, take them to /es/.
+          var langPref = localStorage.getItem("rb-lang");
+          var isEnglish = document.documentElement.lang === "en";
+          if (langPref === "es" && isEnglish) {
+            var to = location.pathname === "/" ? "/es/" : "/es" + location.pathname;
+            location.replace(to + location.search + location.hash);
+          }
+        } catch (e) { /* localStorage may be disabled — safe to ignore */ }
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <slot name="nav" />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <!-- Interactive behavior: theme + lang toggle, mobile menu, filters, reveals -->
+    <script src="/scripts/main.js" defer></script>
+  </body>
+</html>

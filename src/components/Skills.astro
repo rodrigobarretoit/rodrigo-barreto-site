@@ -1,0 +1,32 @@
+---
+/*
+ * Skills section — four grouped cards.
+ * Edit the categories in src/data/content.ts.
+ */
+
+import { skills } from "../data/content";
+import { tr, type Lang } from "../data/ui";
+
+type Props = { lang: Lang };
+const { lang } = Astro.props;
+const t = tr(lang);
+const groups = skills[lang];
+---
+
+<section id="skills" aria-label={t("section.skills")}>
+  <div class="container">
+    <span class="section-eyebrow">{t("section.skills")}</span>
+    <h2 class="section-title">{t("section.skills")}</h2>
+
+    <div class="skills">
+      {groups.map((group) => (
+        <div class="skills__card reveal">
+          <h3>{group.title}</h3>
+          <ul class="skills__list">
+            {group.items.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

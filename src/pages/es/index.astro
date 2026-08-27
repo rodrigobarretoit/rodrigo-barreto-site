@@ -1,0 +1,35 @@
+---
+/*
+ * Home / Perfil — Spanish.
+ * Mirror of index.astro with lang="es".
+ */
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Nav from "../../components/Nav.astro";
+import Hero from "../../components/Hero.astro";
+import QuickFacts from "../../components/QuickFacts.astro";
+import Timeline from "../../components/Timeline.astro";
+import Skills from "../../components/Skills.astro";
+import Certifications from "../../components/Certifications.astro";
+import ClosingStatement from "../../components/ClosingStatement.astro";
+import Contact from "../../components/Contact.astro";
+import Footer from "../../components/Footer.astro";
+
+const lang = "es" as const;
+const title = "Rodrigo Barreto — IT Support Engineer · Dublín";
+const description =
+  "Rodrigo Barreto — IT Support Engineer en Dublín. De un pueblo chico en Paraguay a mantener a 500+ usuarios operativos en 8 países. Microsoft 365, Intune, Entra ID, Active Directory. Disponible ahora.";
+---
+
+<BaseLayout lang={lang} title={title} description={description} path={Astro.url.pathname}>
+  <Nav slot="nav" lang={lang} path={Astro.url.pathname} page="profile" />
+
+  <Hero lang={lang} />
+  <QuickFacts lang={lang} />
+  <Timeline lang={lang} />
+  <Skills lang={lang} />
+  <Certifications lang={lang} />
+  <ClosingStatement lang={lang} />
+  <Contact lang={lang} />
+  <Footer lang={lang} />
+</BaseLayout>
