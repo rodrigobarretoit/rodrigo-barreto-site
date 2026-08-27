@@ -52,11 +52,17 @@ export const ui = {
     "requestCv.lead": "Send me a quick note and I'll get back to you with the latest version of my CV within 24 hours.",
     "requestCv.name": "Your name",
     "requestCv.company": "Company",
+    "requestCv.email": "Your email",
     "requestCv.role": "Role you're hiring for (optional)",
     "requestCv.message": "Anything else you'd like to add (optional)",
-    "requestCv.submit": "Open my email to send",
-    "requestCv.note": "Clicking the button opens your default email client (Outlook, Apple Mail, Gmail) with everything pre-filled. You just hit Send.",
+    "requestCv.submit": "Send request",
+    "requestCv.note": "Your message goes straight to my inbox. I'll reply with the latest CV within 24 hours.",
     "requestCv.back": "← Back to profile",
+
+    // Thanks page
+    "thanks.title": "Message received",
+    "thanks.body": "Thanks for reaching out. I'll come back to you within 24 hours with the latest version of my CV.",
+    "thanks.back": "← Back to profile",
 
     // Proof page
     "proof.title": "Proof",
@@ -118,11 +124,17 @@ export const ui = {
     "requestCv.lead": "Mandame una nota corta y te respondo con la última versión de mi CV en menos de 24 horas.",
     "requestCv.name": "Tu nombre",
     "requestCv.company": "Empresa",
+    "requestCv.email": "Tu email",
     "requestCv.role": "Puesto que estás cubriendo (opcional)",
     "requestCv.message": "Cualquier otra cosa que quieras agregar (opcional)",
-    "requestCv.submit": "Abrir mi email para enviar",
-    "requestCv.note": "Al hacer click se abre tu cliente de email (Outlook, Apple Mail, Gmail) con todo pre-cargado. Solo tenés que apretar Enviar.",
+    "requestCv.submit": "Enviar solicitud",
+    "requestCv.note": "Tu mensaje llega directo a mi inbox. Te respondo con el CV actualizado en menos de 24 horas.",
     "requestCv.back": "← Volver al perfil",
+
+    // Thanks page
+    "thanks.title": "Mensaje recibido",
+    "thanks.body": "Gracias por escribir. Te respondo con la última versión de mi CV en menos de 24 horas.",
+    "thanks.back": "← Volver al perfil",
 
     // Proof page
     "proof.title": "Pruebas",
