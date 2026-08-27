@@ -22,10 +22,11 @@ export const site = {
   // If you ever want a public PDF download instead, add `cvPath: "/cv/…"`
   // and swap the /request-cv link for `<a download href={site.cvPath}>`.
 
-  // Scheduling — for the "Book a call" button in Contact.
-  // Replace this placeholder with your actual Cal.com or Calendly link once
-  // you've created the account (see README > "Book-a-call setup").
-  scheduleUrl: "https://cal.com/rodrigobarreto",
+  // Scheduling — Cal.com link for the "Book a call" button in Contact.
+  // Points to the 30-minute event type (default for intro calls with recruiters).
+  // If you rename your Cal.com username later (Settings → General → Username),
+  // update the middle segment of this URL to the new one.
+  scheduleUrl: "https://cal.com/rodrigo-roa-rod-mlzvvs/30min",
 
   // Domain — bump this when you have a real one; used in Open Graph tags.
   domain: "rodrigobarretoit.com",
