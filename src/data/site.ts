@@ -24,7 +24,7 @@ export const site = {
   cvRequestSubject: "CV request from your site",
 
   // Domain — bump this when you have a real one; used in Open Graph tags.
-  domain: "rodrigobarreto.example",
+  domain: "rodrigobarretoit.com",
 } as const;
 
 /**

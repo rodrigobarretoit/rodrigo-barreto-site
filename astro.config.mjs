@@ -15,7 +15,7 @@ import { defineConfig } from "astro/config";
  *   - It powers absolute URLs in the sitemap and Open Graph tags.
  */
 export default defineConfig({
-  site: "https://rodrigobarreto.example",
+  site: "https://rodrigobarretoit.com",
   i18n: {
     defaultLocale: "en",
     locales: ["en", "es"],
