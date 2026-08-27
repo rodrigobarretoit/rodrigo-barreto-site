@@ -43,12 +43,10 @@ export const ui = {
 
     // Buttons
     "cta.letsTalk": "Let's talk",
-    "cta.downloadCv": "Download CV",
     "cta.requestCv": "Request CV",
     "cta.contact": "Contact",
     "cta.email": "Email me",
     "cta.bookCall": "Book a call",
-    "cta.cvUnavailable": "CV coming soon",
 
     // Request CV page
     "requestCv.title": "Request my CV",
@@ -119,12 +117,10 @@ export const ui = {
 
     // Buttons
     "cta.letsTalk": "Hablemos",
-    "cta.downloadCv": "Descargar CV",
     "cta.requestCv": "Solicitar CV",
     "cta.contact": "Contacto",
     "cta.email": "Escribime",
     "cta.bookCall": "Agendar una llamada",
-    "cta.cvUnavailable": "CV próximamente",
 
     // Request CV page
     "requestCv.title": "Solicitar mi CV",

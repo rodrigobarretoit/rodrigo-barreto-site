@@ -11,7 +11,7 @@
  *   - page: "profile" | "proof" — highlights the active nav link.
  */
 
-import { site, cvExists } from "../data/site";
+import { site } from "../data/site";
 import { tr, type Lang } from "../data/ui";
 
 type Props = { lang: Lang; path: string; page: "profile" | "proof" };
@@ -60,17 +60,8 @@ const contactHref = `${profileHref}#contact`;
     </div>
 
     <div class="nav__ctas">
-      <!-- Secondary CTA: direct CV download (or disabled if the file is missing). -->
-      {cvExists ? (
-        <a href={site.cvPath} class="btn btn--ghost" download>{t("cta.downloadCv")}</a>
-      ) : (
-        <span
-          class="btn btn--ghost is-disabled"
-          aria-disabled="true"
-          title={`Drop the file at public${site.cvPath} to enable this button.`}
-        >{t("cta.cvUnavailable")}</span>
-      )}
-      <!-- Primary CTA: contact-first. -->
+      <!-- Primary CTA: contact-first. The CV is not publicly downloadable —
+           recruiters use the /request-cv form (surfaced in Contact section). -->
       <a href={contactHref} class="btn btn--primary">{t("cta.letsTalk")}</a>
 
       <!--

@@ -13,7 +13,7 @@
  * NO phone, NO street address. Public-safe only.
  */
 
-import { site, cvExists } from "../data/site";
+import { site } from "../data/site";
 import { tr, type Lang } from "../data/ui";
 
 type Props = { lang: Lang };
@@ -36,9 +36,6 @@ const requestCvHref = lang === "en" ? "/request-cv/" : "/es/request-cv/";
             {t("cta.bookCall")}
           </a>
           <a href={requestCvHref} class="btn btn--ghost">{t("cta.requestCv")}</a>
-          {cvExists && (
-            <a href={site.cvPath} class="btn btn--ghost" download>{t("cta.downloadCv")}</a>
-          )}
         </div>
       </div>
 

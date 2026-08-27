@@ -1,0 +1,30 @@
+<!--
+  Netlify Forms detection helper.
+
+  Netlify parses static HTML at build time looking for forms with
+  `netlify` / `data-netlify` attributes and registers them as endpoints.
+  Some SSGs (Astro included) can generate HTML that Netlify's parser
+  misses in edge cases. This file is served as /__forms.html and lists
+  every form the site uses, so Netlify always sees them.
+
+  This file is NOT navigated to by any real visitor. It exists purely
+  for Netlify's build-time parser. Keep the fields IDENTICAL to the
+  actual form in src/components/RequestCvForm.astro.
+-->
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>Netlify forms</title></head>
+  <body>
+
+    <form name="request-cv" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="request-cv" />
+      <input name="bot-field" />
+      <input name="name" type="text" />
+      <input name="company" type="text" />
+      <input name="email" type="email" />
+      <input name="role" type="text" />
+      <textarea name="message"></textarea>
+    </form>
+
+  </body>
+</html>

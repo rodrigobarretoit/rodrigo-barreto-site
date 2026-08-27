@@ -21,7 +21,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { site, cvExists } from "../data/site";
+import { site } from "../data/site";
 import { hero } from "../data/content";
 import { tr, type Lang } from "../data/ui";
 
@@ -65,22 +65,11 @@ const portraitExists = (() => {
       <div class="hero__actions">
         <!-- Primary: contact-first CTA -->
         <a href="#contact" class="btn btn--primary">{t("cta.letsTalk")}</a>
-
-        <!-- Secondary: direct CV download. Auto-disabled if the PDF isn't
-             present in /public/cv/ so we never ship a 404. -->
-        {cvExists ? (
-          <a href={site.cvPath} class="btn btn--ghost" download>
-            {t("cta.downloadCv")}
-          </a>
-        ) : (
-          <span
-            class="btn btn--ghost is-disabled"
-            aria-disabled="true"
-            title={`Drop the file at public${site.cvPath} to enable this button.`}
-          >
-            {t("cta.cvUnavailable")}
-          </span>
-        )}
+        <!-- Secondary: send visitors to the request-CV form. -->
+        <a
+          href={lang === "en" ? "/request-cv/" : "/es/request-cv/"}
+          class="btn btn--ghost"
+        >{t("cta.requestCv")}</a>
       </div>
     </div>
 
@@ -109,14 +98,6 @@ const portraitExists = (() => {
 </section>
 
 <style>
-  /* Disabled state for CTA (when a file dependency is missing) */
-  .btn.is-disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: auto;
-  }
-  .btn.is-disabled:hover { transform: none; }
-
   /* Missing-photo placeholder — clear signal to upload the file */
   .hero__portrait-placeholder {
     position: absolute;
