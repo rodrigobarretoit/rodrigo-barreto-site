@@ -1,120 +1,172 @@
 ---
 /*
- * Request CV form — powered by Netlify Forms.
+ * Request CV form — powered by Netlify Forms (AJAX submission).
+ *
+ * Why AJAX instead of native form POST:
+ *   - Native POST relies on Netlify redirecting to /thanks. During a fresh
+ *     deploy the /thanks page can 404 on some edge nodes for a few seconds
+ *     — a real recruiter would see a "Page not found" and bounce.
+ *   - AJAX submits the form data with fetch(), then shows inline success or
+ *     error UI. No redirect race, no full page reload.
  *
  * How it works:
- *   1. Form submits directly to Netlify's form endpoint (built-in when the
- *      form has `data-netlify="true"` and a `name="…"` attribute).
- *   2. Netlify stores the submission in the site's Forms panel and emails
- *      Rodrigo a notification (once he adds his email in
- *      Site settings → Forms → Form notifications).
- *   3. After submit, the visitor is redirected to /thanks (or /es/thanks).
+ *   1. Visitor fills the form and clicks Send.
+ *   2. JS intercepts, disables the button, POSTs application/x-www-form-urlencoded
+ *      to "/" (Netlify's site root — where the Forms middleware listens).
+ *   3. On 200/OK: swap the form for a success card. Submission is stored in
+ *      Netlify Forms and (once notifications are configured) emailed to Rodrigo.
+ *   4. On error: show an inline error with a mailto fallback so the visitor
+ *      can still reach out.
  *
- * Anti-spam:
- *   - Honeypot field "bot-field" is hidden from humans. If a bot fills it,
- *     Netlify silently drops the submission.
- *   - Netlify's own spam heuristics catch most of the rest.
+ * Anti-spam: honeypot field "bot-field" hidden from humans. Netlify silently
+ * drops submissions where it's filled.
  *
- * Note for local dev:
- *   Netlify Forms only work on the deployed site. `npm run dev` will render
- *   the form fine but a submit will 404 because there's no Netlify backend
- *   locally. Test the actual submit on the live URL after deploy.
+ * Detection helper: `public/__forms.html` contains a hidden static copy of
+ * this form so Netlify's build-time parser always finds it.
  */
 
+import { site } from "../data/site";
 import { tr, type Lang } from "../data/ui";
 
 type Props = { lang: Lang };
 const { lang } = Astro.props;
 const t = tr(lang);
-
-const thanksHref = lang === "en" ? "/thanks/" : "/es/thanks/";
 ---
 
-<form
-  class="rcv-form"
-  name="request-cv"
-  method="POST"
-  data-netlify="true"
-  netlify-honeypot="bot-field"
-  action={thanksHref}
->
-  <!-- Netlify uses this hidden input to identify the form when it
-       receives the POST (in some client-side setups it's required). -->
-  <input type="hidden" name="form-name" value="request-cv" />
+<div class="rcv-wrap" data-lang={lang}>
+  <form
+    class="rcv-form"
+    id="rcv-form"
+    name="request-cv"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+  >
+    <input type="hidden" name="form-name" value="request-cv" />
 
-  <!-- Honeypot: humans don't see this; bots fill it. Netlify drops those. -->
-  <p class="rcv-honeypot" aria-hidden="true">
-    <label>
-      {lang === "en" ? "Don't fill this out:" : "No completes esto:"}
-      <input name="bot-field" tabindex="-1" autocomplete="off" />
-    </label>
-  </p>
+    <!-- Honeypot: humans don't see this; bots fill it. Netlify drops those. -->
+    <p class="rcv-honeypot" aria-hidden="true">
+      <label>
+        {lang === "en" ? "Don't fill this out:" : "No completes esto:"}
+        <input name="bot-field" tabindex="-1" autocomplete="off" />
+      </label>
+    </p>
 
-  <div class="rcv-field">
-    <label for="rcv-name">{t("requestCv.name")} <span aria-hidden="true">*</span></label>
-    <input
-      type="text"
-      id="rcv-name"
-      name="name"
-      required
-      autocomplete="name"
-      minlength="2"
-    />
+    <div class="rcv-field">
+      <label for="rcv-name">{t("requestCv.name")} <span aria-hidden="true">*</span></label>
+      <input type="text" id="rcv-name" name="name" required autocomplete="name" minlength="2" />
+    </div>
+
+    <div class="rcv-field">
+      <label for="rcv-company">{t("requestCv.company")} <span aria-hidden="true">*</span></label>
+      <input type="text" id="rcv-company" name="company" required autocomplete="organization" minlength="2" />
+    </div>
+
+    <div class="rcv-field">
+      <label for="rcv-email">{t("requestCv.email")} <span aria-hidden="true">*</span></label>
+      <input type="email" id="rcv-email" name="email" required autocomplete="email" />
+    </div>
+
+    <div class="rcv-field">
+      <label for="rcv-role">{t("requestCv.role")}</label>
+      <input type="text" id="rcv-role" name="role" autocomplete="off" />
+    </div>
+
+    <div class="rcv-field">
+      <label for="rcv-message">{t("requestCv.message")}</label>
+      <textarea id="rcv-message" name="message" rows="4"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn--primary rcv-submit" id="rcv-submit">
+      {t("requestCv.submit")}
+    </button>
+
+    <p class="rcv-note">{t("requestCv.note")}</p>
+  </form>
+
+  <!-- Success card (hidden until submit succeeds) -->
+  <div class="rcv-success" id="rcv-success" hidden role="status" aria-live="polite">
+    <div class="rcv-success__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="48" height="48" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+    </div>
+    <h2>{t("thanks.title")}</h2>
+    <p>{t("thanks.body")}</p>
   </div>
 
-  <div class="rcv-field">
-    <label for="rcv-company">{t("requestCv.company")} <span aria-hidden="true">*</span></label>
-    <input
-      type="text"
-      id="rcv-company"
-      name="company"
-      required
-      autocomplete="organization"
-      minlength="2"
-    />
+  <!-- Error card (hidden until submit fails; falls back to mailto) -->
+  <div class="rcv-error" id="rcv-error" hidden role="alert">
+    <p>
+      <strong>
+        {lang === "en" ? "Something went wrong sending the form." : "Algo falló al enviar el formulario."}
+      </strong>
+      <br />
+      {lang === "en"
+        ? "Please email me directly at "
+        : "Escribime directo a "}
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      {lang === "en" ? "." : "."}
+    </p>
   </div>
+</div>
 
-  <div class="rcv-field">
-    <label for="rcv-email">{t("requestCv.email")} <span aria-hidden="true">*</span></label>
-    <input
-      type="email"
-      id="rcv-email"
-      name="email"
-      required
-      autocomplete="email"
-    />
-  </div>
+<script is:inline>
+  (function () {
+    "use strict";
+    var form    = document.getElementById("rcv-form");
+    var submit  = document.getElementById("rcv-submit");
+    var success = document.getElementById("rcv-success");
+    var errorEl = document.getElementById("rcv-error");
+    if (!form) return;
 
-  <div class="rcv-field">
-    <label for="rcv-role">{t("requestCv.role")}</label>
-    <input
-      type="text"
-      id="rcv-role"
-      name="role"
-      autocomplete="off"
-    />
-  </div>
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
 
-  <div class="rcv-field">
-    <label for="rcv-message">{t("requestCv.message")}</label>
-    <textarea id="rcv-message" name="message" rows="4"></textarea>
-  </div>
+      // Serialise form data as application/x-www-form-urlencoded (what
+      // Netlify Forms expects for classic form submissions).
+      var params = new URLSearchParams();
+      var data = new FormData(form);
+      data.forEach(function (value, key) {
+        params.append(key, typeof value === "string" ? value : "");
+      });
 
-  <button type="submit" class="btn btn--primary rcv-submit">
-    {t("requestCv.submit")}
-  </button>
+      submit.disabled = true;
+      var originalLabel = submit.textContent;
+      submit.textContent = "…";
 
-  <p class="rcv-note">{t("requestCv.note")}</p>
-</form>
+      fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString(),
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          // Success — swap the form for the success card.
+          form.hidden = true;
+          success.hidden = false;
+          // Scroll the success card into view (helps on mobile).
+          success.scrollIntoView({ behavior: "smooth", block: "center" });
+        })
+        .catch(function (err) {
+          console.warn("[request-cv] submit failed:", err);
+          submit.disabled = false;
+          submit.textContent = originalLabel;
+          errorEl.hidden = false;
+        });
+    });
+  })();
+</script>
 
 <style>
+  .rcv-wrap { max-width: 560px; }
   .rcv-form {
-    max-width: 560px;
     display: grid;
     gap: 1rem;
   }
   .rcv-honeypot {
-    /* Hidden from humans, still in DOM for bots to find and fill */
     position: absolute;
     left: -9999px;
     opacity: 0;
@@ -132,9 +184,7 @@ const thanksHref = lang === "en" ? "/thanks/" : "/es/thanks/";
     color: var(--text-muted);
     font-weight: 600;
   }
-  .rcv-field label span {
-    color: var(--accent);
-  }
+  .rcv-field label span { color: var(--accent); }
   .rcv-field input,
   .rcv-field textarea {
     background: var(--bg-card);
@@ -151,18 +201,59 @@ const thanksHref = lang === "en" ? "/thanks/" : "/es/thanks/";
     outline-offset: 2px;
     border-color: var(--accent);
   }
-  .rcv-field textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-  .rcv-submit {
-    justify-self: start;
-    margin-top: 0.5rem;
-  }
+  .rcv-field textarea { resize: vertical; min-height: 100px; }
+  .rcv-submit { justify-self: start; margin-top: 0.5rem; }
+  .rcv-submit:disabled { opacity: 0.6; cursor: wait; }
   .rcv-note {
     font-size: 0.88rem;
     color: var(--text-dim);
     max-width: 60ch;
     line-height: 1.5;
+  }
+
+  /* Success card */
+  .rcv-success {
+    display: grid;
+    gap: 1rem;
+    padding: 2rem;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    text-align: left;
+  }
+  .rcv-success__icon {
+    color: var(--accent);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    display: grid;
+    place-items: center;
+  }
+  .rcv-success h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin: 0;
+  }
+  .rcv-success p {
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* Error card */
+  .rcv-error {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #e04a4a;
+    background: rgba(224, 74, 74, 0.08);
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .rcv-error a {
+    color: var(--accent);
+    text-decoration: underline;
   }
 </style>
